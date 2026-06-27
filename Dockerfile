@@ -1,8 +1,15 @@
-FROM python:3.8-slim-buster
+FROM python:3.11-slim
+
 WORKDIR /app
+
 COPY . /app
 
-RUN apt update -y && apt install awscli -y
+RUN apt-get update && \
+    apt-get install -y ffmpeg libsm6 libxext6 unzip && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && apt-get install ffmpeg libsm6 libxext6 unzip -y && pip install -r requirements.txt
-CMD ["python3", "app.py"]
+RUN pip install --no-cache-dir -r requirements.txt
+
+EXPOSE 8080
+
+CMD ["python", "app.py"]
